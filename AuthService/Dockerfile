@@ -5,9 +5,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
-COPY ./AuthService/AuthService ./AuthService/AuthService
-WORKDIR ./AuthService/AuthService ./AuthService/AuthService
-RUN dotnet restore "AuthService.csproj"
+COPY NuGet.Config NuGet.Config
+COPY AuthService.csproj AuthService.csproj
+RUN dotnet restore AuthService.csproj
+COPY . .
+WORKDIR /src
 RUN dotnet build "AuthService.csproj" -c Release -o /app/build
 
 FROM build AS publish
